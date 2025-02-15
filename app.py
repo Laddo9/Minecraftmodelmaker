@@ -9,9 +9,11 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+from flask import render_template
+
 @app.route("/")
 def home():
-    return "Minecraft 2D to 3D Model Converter API is running!"
+    return render_template("index.html")
 
 @app.route("/convert", methods=["POST"])
 def convert_to_3d():
