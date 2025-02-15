@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 2D → 3D Model Dönüştürücü</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #282c34; color: white; }
+        .container { margin-top: 50px; }
+        button { background-color: #4CAF50; color: white; padding: 10px; border: none; cursor: pointer; }
+        #preview { width: 400px; height: 400px; margin: auto; border: 1px solid white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2D Minecraft Modelini 3D'ye Dönüştür</h1>
+        <input type="file" id="imageUpload" accept="image/png, image/jpeg">
+        <button id="convertBtn">Dönüştür</button>
+        <a id="downloadLink" style="display: none;">JSON Modeli İndir</a>
+        <div id="preview"></div>
+    </div>
+    <script>
+        document.getElementById('convertBtn').addEventListener('click', async function() {
+            let fileInput = document.getElementById('imageUpload').files[0];
+            if (!fileInput) {
+                alert("Lütfen bir resim yükleyin!");
+                return;
+            }
+            let formData = new FormData();
+            formData.append("file", fileInput);
+            let response = await fetch("/convert", { method: "POST", body: formData });
+            if (response.ok) {
+                let jsonBlob = await response.blob();
+                let downloadLink = document.getElementById("downloadLink");
+                downloadLink.href = URL.createObjectURL(jsonBlob);
+                downloadLink.style.display = "block";
+                downloadLink.innerText = "JSON Modeli İndir";
+                downloadLink.download = "minecraft_model.json";
+            } else {
+                alert("Dönüştürme başarısız!");
+            }
+        });
+    </script>
+</body>
+</html>
